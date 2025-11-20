@@ -143,7 +143,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       context,
                                       MaterialPageRoute(
                                         // Kirim nama asli dari database ke HomeScreen
-                                        builder: (_) => HomeScreen(namaUser: user['nama']),
+                                        builder: (_) => HomeScreen(namaUser: user['nama'],userId: user['id'],),
                                       ),
                                     );
                                   } else {
