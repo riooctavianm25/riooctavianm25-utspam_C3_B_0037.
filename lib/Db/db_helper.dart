@@ -20,9 +20,9 @@ class DBHelper {
 
     return await openDatabase(
       path,
-      version: 2, 
+      version: 2, // Versi database
       onCreate: (db, version) async {
-        // Buat Tabel Users (Gunakan IF NOT EXISTS)
+        // --- 1. Buat Tabel Users ---
         await db.execute('''
           CREATE TABLE IF NOT EXISTS users (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -36,7 +36,7 @@ class DBHelper {
           )
         ''');
 
-        // Buat Tabel Sewa (Gunakan IF NOT EXISTS)
+        // --- 2. Buat Tabel Sewa ---
         await db.execute('''
           CREATE TABLE IF NOT EXISTS sewa (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -51,10 +51,10 @@ class DBHelper {
           )
         ''');
       },
-      // FUNGSI UPDATE DATABASE OTOMATIS
+      // FUNGSI UPDATE DATABASE (Jika versi naik)
       onUpgrade: (db, oldVersion, newVersion) async {
         if (oldVersion < 2) {
-          // Gunakan IF NOT EXISTS juga di sini untuk keamanan ekstra
+          // Jika user update dari versi 1 ke 2, pastikan tabel sewa dibuat
           await db.execute('''
             CREATE TABLE IF NOT EXISTS sewa (
               id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -73,12 +73,17 @@ class DBHelper {
     );
   }
 
-  // --- FUNGSI USER (REGISTER & LOGIN) ---
+  // ==========================================
+  //              FUNGSI AUTH (USER)
+  // ==========================================
+
+  // 1. Register User Baru
   Future<int> registerUser(Map<String, dynamic> data) async {
     final db = await database;
     return await db.insert("users", data);
   }
 
+  // 2. Login User
   Future<Map<String, dynamic>?> login(String username, String password) async {
     final db = await database;
     List<Map<String, dynamic>> result = await db.query(
@@ -93,15 +98,32 @@ class DBHelper {
     return null;
   }
 
-  // --- FUNGSI TRANSAKSI SEWA ---
-  
+  // 3. Ambil Data Profil User Berdasarkan ID (Untuk Halaman Profil)
+  Future<Map<String, dynamic>?> getUserById(int id) async {
+    final db = await database;
+    List<Map<String, dynamic>> results = await db.query(
+      "users",
+      where: "id = ?",
+      whereArgs: [id],
+    );
+
+    if (results.isNotEmpty) {
+      return results.first;
+    }
+    return null;
+  }
+
+  // ==========================================
+  //           FUNGSI TRANSAKSI (SEWA)
+  // ==========================================
+
   // 1. Tambah Sewa
   Future<int> tambahSewa(Map<String, dynamic> data) async {
     final db = await database;
     return await db.insert("sewa", data);
   }
 
-  // 2. Ambil Semua Riwayat
+  // 2. Ambil Semua Riwayat Sewa
   Future<List<Map<String, dynamic>>> getAllSewa() async {
     final db = await database;
     return await db.query("sewa", orderBy: "id DESC");
@@ -132,7 +154,7 @@ class DBHelper {
     );
   }
 
-  // 5. Update Status Sewa
+  // 5. Update Status Sewa (Misal: Aktif -> Selesai)
   Future<int> updateSewaStatus(int id, String newStatus) async {
     final db = await database;
     return await db.update(
