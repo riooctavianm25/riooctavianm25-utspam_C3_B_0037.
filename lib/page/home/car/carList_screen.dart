@@ -1,0 +1,128 @@
+// lib/page/carList_screen.dart
+
+import 'package:flutter/material.dart';
+import 'package:uts_3012310037/Db/model/mobil.dart';
+// Pastikan path ini mengarah ke file rentForm_Screen.dart kamu
+import 'package:uts_3012310037/page/home/car/rentForm_Screen.dart'; 
+
+class DaftarCar extends StatelessWidget {
+  // List mobil didefinisikan tanpa 'const' agar tidak error
+  final List<Mobil> dummycar = [
+    Mobil(
+        nama: "Toyota Avanza",
+        jenis: "MPV",
+        gambar: "asset/image/avanza.jpg",
+        harga: 250000),
+    Mobil(
+        nama: "Porsche 911 GT3",
+        jenis: "Sport",
+        gambar: "asset/image/porsche.jpg",
+        harga: 2000000),
+    Mobil(
+        nama: "Mitsubishi Pajero",
+        jenis: "SUV",
+        gambar: "asset/image/pajero.jpg",
+        harga: 450000),
+  ];
+
+  // Hapus 'const' pada constructor ini juga
+  DaftarCar({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Pilih Mobil"),
+      ),
+      body: ListView.builder(
+        itemCount: dummycar.length,
+        itemBuilder: (context, index) {
+          final car = dummycar[index];
+
+          return Card(
+            margin: const EdgeInsets.all(12),
+            elevation: 4,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            child: InkWell(
+              // Opsi 1: Klik Card juga bisa pindah (Opsional)
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => FormSewaScreen(mobil: car),
+                  ),
+                );
+              },
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  children: [
+                    // Gambar Mobil
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(8),
+                      child: Image.asset(
+                        car.gambar, 
+                        width: 90, 
+                        height: 70, 
+                        fit: BoxFit.cover,
+                        errorBuilder: (ctx, error, stack) => const Icon(Icons.car_rental, size: 70),
+                      ),
+                    ),
+                    const SizedBox(width: 15),
+                    
+                    // Detail Info Mobil
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            car.nama,
+                            style: const TextStyle(
+                              fontSize: 17, 
+                              fontWeight: FontWeight.bold
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            "${car.jenis} • Rp ${car.harga.toString()}/hari",
+                            style: TextStyle(
+                              fontSize: 14, 
+                              color: Colors.grey[700]
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    // --- TOMBOL SEWA ---
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.blue[700],
+                        foregroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8)
+                        ),
+                        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
+                      ),
+                      child: const Text("Sewa", style: TextStyle(fontSize: 15)),
+                      onPressed: () {
+                         // NAVIGASI KE FORM SEWA
+                         Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            // Membuka rentForm_Screen.dart (Class FormSewaScreen)
+                            builder: (context) => FormSewaScreen(mobil: car),
+                          ),
+                        );
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
