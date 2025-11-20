@@ -7,8 +7,10 @@ import 'package:uts_3012310037/page/home/home_screen.dart';
 
 class FormSewaScreen extends StatefulWidget {
   final Mobil mobil; // Data mobil yang dipilih dari halaman sebelumnya
+  final int userId;
+  final String namaUser;
 
-  const FormSewaScreen({super.key, required this.mobil});
+  const FormSewaScreen({super.key, required this.mobil, required this.namaUser, required this.userId});
 
   @override
   State<FormSewaScreen> createState() => _FormSewaScreenState();
@@ -97,7 +99,7 @@ class _FormSewaScreenState extends State<FormSewaScreen> {
       // Atau jika sudah buat halaman RiwayatSewa, arahkan kesana.
       Navigator.pushAndRemoveUntil(
         context,
-        MaterialPageRoute(builder: (_) => HomeScreen(namaUser: _namaPenyewaCtr.text)), // Asumsi kembali ke home
+        MaterialPageRoute(builder: (_) => HomeScreen(namaUser: _namaPenyewaCtr.text,userId: widget.userId)), // Asumsi kembali ke home
         (route) => false, 
       );
     }
