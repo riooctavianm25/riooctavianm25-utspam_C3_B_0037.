@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 // --- IMPORT HALAMAN TUJUAN ---
 // 1. Daftar Mobil (Tambah Sewa)
 import 'package:uts_3012310037/page/home/car/carList_screen.dart';
+import 'package:uts_3012310037/page/profile.dart';
 // 2. Riwayat Sewa (History) - Pastikan path ini sesuai dengan file historyRent.dart Anda
 import 'package:uts_3012310037/page/transaksi/historyRent.dart';
 // 3. Login (Untuk Logout)
@@ -12,8 +13,9 @@ import 'package:uts_3012310037/page/auth/login_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   final String namaUser;
+  final int userId;
 
-  const HomeScreen({super.key, required this.namaUser});
+  const HomeScreen({super.key, required this.namaUser, required this.userId});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -73,10 +75,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 // --- Header ---
                 const SizedBox(height: 20),
                 Text(
-                  "Selamat pagi,",
+                  "Selamat datang,",
                   style: TextStyle(
                     fontSize: 16,
-                    color: Colors.grey[700],
+                    color: const Color.fromARGB(255, 0, 0, 0),
                   ),
                 ),
                 Text(
@@ -111,7 +113,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (_) => DaftarCar()),
+                      MaterialPageRoute(builder: (_) => DaftarCar(userId: widget.userId,namaUser: widget.namaUser,)),
                     );
                   },
                 ),
@@ -132,20 +134,20 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
 
                 // 3. PROFIL PENGGUNA (Sudah Aktif)
-                // _menuTile(
-                //   icon: Icons.person_outline,
-                //   title: "Profil Pengguna",
-                //   subtitle: "Lihat detail akun Anda",
-                //   color: Colors.green,
-                //   onTap: () {
-                //     Navigator.push(
-                //       context,
-                //       MaterialPageRoute(
-                //         builder: (_) => ProfileScreen(namaUser: widget.namaUser),
-                //       ),
-                //     );
-                //   },
-                // ),
+                _menuTile(
+                  icon: Icons.person_outline,
+                  title: "Profil Pengguna",
+                  subtitle: "Lihat detail akun Anda",
+                  color: Colors.green,
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => ProfileScreen(userId: widget.userId),
+                      ),
+                    );
+                  },
+                ),
 
                 // 4. KELUAR
                 _menuTile(
