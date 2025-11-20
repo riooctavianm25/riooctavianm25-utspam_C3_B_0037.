@@ -25,8 +25,11 @@ class DaftarCar extends StatelessWidget {
         harga: 450000),
   ];
 
+  final String namaUser;
+  final int userId;
+
   // Hapus 'const' pada constructor ini juga
-  DaftarCar({super.key});
+  DaftarCar({super.key,required this.namaUser,required this.userId});
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +52,7 @@ class DaftarCar extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => FormSewaScreen(mobil: car),
+                    builder: (context) => FormSewaScreen(mobil: car,userId: userId,namaUser: namaUser),
                   ),
                 );
               },
@@ -111,7 +114,7 @@ class DaftarCar extends StatelessWidget {
                           context,
                           MaterialPageRoute(
                             // Membuka rentForm_Screen.dart (Class FormSewaScreen)
-                            builder: (context) => FormSewaScreen(mobil: car),
+                            builder: (context) => FormSewaScreen(mobil: car,userId: userId,namaUser: namaUser,),
                           ),
                         );
                       },
