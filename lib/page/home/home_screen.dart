@@ -1,15 +1,8 @@
 import 'package:flutter/material.dart';
-
-// --- IMPORT HALAMAN TUJUAN ---
-// 1. Daftar Mobil (Tambah Sewa)
 import 'package:uts_3012310037/page/home/car/carList_screen.dart';
 import 'package:uts_3012310037/page/profile.dart';
-// 2. Riwayat Sewa (History) - Pastikan path ini sesuai dengan file historyRent.dart Anda
 import 'package:uts_3012310037/page/transaksi/historyRent.dart';
-// 3. Login (Untuk Logout)
 import 'package:uts_3012310037/page/auth/login_screen.dart';
-// 4. Profil Pengguna (Sudah di-uncomment, pastikan file ini dibuat di Langkah 2)
-// import 'package:uts_3012310037/page/home/profile_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   final String namaUser;
@@ -22,7 +15,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  // Fungsi Logout: Kembali ke Login & Hapus histori navigasi back
   void _handleLogout() {
     showDialog(
       context: context,
@@ -60,7 +52,7 @@ class _HomeScreenState extends State<HomeScreen> {
           gradient: LinearGradient(
             colors: [
               Color.fromARGB(255, 240, 240, 250),
-              Color.fromARGB(255, 1, 1, 1),
+              Color.fromARGB(255, 24, 21, 51),
             ],
             begin: Alignment.topCenter,
             end: Alignment.bottomLeft,
@@ -102,9 +94,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 const SizedBox(height: 15),
 
-                // --- MENU NAVIGATION ---
-
-                // 1. TAMBAH SEWA
                 _menuTile(
                   icon: Icons.add_circle_outline,
                   title: "Tambah Sewa",
@@ -118,7 +107,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   },
                 ),
 
-                // 2. RIWAYAT SEWA
                 _menuTile(
                   icon: Icons.history,
                   title: "Riwayat Sewa",
@@ -133,7 +121,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   },
                 ),
 
-                // 3. PROFIL PENGGUNA (Sudah Aktif)
                 _menuTile(
                   icon: Icons.person_outline,
                   title: "Profil Pengguna",
@@ -149,7 +136,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   },
                 ),
 
-                // 4. KELUAR
                 _menuTile(
                   icon: Icons.logout_rounded,
                   title: "Keluar",
