@@ -1,12 +1,8 @@
-// lib/page/carList_screen.dart
-
 import 'package:flutter/material.dart';
 import 'package:uts_3012310037/Db/model/mobil.dart';
-// Pastikan path ini mengarah ke file rentForm_Screen.dart kamu
 import 'package:uts_3012310037/page/home/car/rentForm_Screen.dart'; 
 
 class DaftarCar extends StatelessWidget {
-  // List mobil didefinisikan tanpa 'const' agar tidak error
   final List<Mobil> dummycar = [
 Mobil(
     nama: "Rolls-Royce Phantom",
@@ -33,7 +29,6 @@ Mobil(
     harga: 27000000,
   ),
 
-  // --- ITALIAN SUPERCARS ---
   Mobil(
     nama: "Lamborghini Aventador",
     jenis: "Supercar",
@@ -59,7 +54,6 @@ Mobil(
     harga: 34000000,
   ),
 
-  // --- BRITISH & GERMAN PERFORMANCE ---
   Mobil(
     nama: "McLaren 720S",
     jenis: "Supercar",
@@ -85,7 +79,6 @@ Mobil(
     harga: 13000000,
   ),
 
-  // --- LUXURY SUVS & SEDANS ---
   Mobil(
     nama: "Mercedes-Maybach S-Class",
     jenis: "Luxury Sedan",
@@ -116,8 +109,7 @@ Mobil(
     gambar: "asset/image/escalade.jpg",
     harga: 12000000,
   ),
-  
-  // --- MPV & ELECTRIC ---
+
   Mobil(
     nama: "Lexus LM 350",
     jenis: "Luxury MPV",
@@ -141,33 +133,29 @@ Mobil(
   final String namaUser;
   final int userId;
 
-  // Hapus 'const' pada constructor ini juga
   DaftarCar({super.key,required this.namaUser,required this.userId});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // --- PENYESUAIAN APPBAR AGAR GRADIENT TERLIHAT ---
       appBar: AppBar(
-        title: const Text("Pilih Mobil", style: TextStyle(color: Color.fromARGB(255, 0, 0, 0))), // Judul putih
-        backgroundColor: Colors.transparent, // Latar belakang transparan
-        elevation: 0, // Tanpa shadow
-        iconTheme: const IconThemeData(color: Color.fromARGB(255, 1, 1, 1)), // Tombol back jadi putih
+        title: const Text("Pilih Mobil", style: TextStyle(color: Color.fromARGB(255, 0, 0, 0))), 
+        backgroundColor: Colors.transparent,
+        elevation: 0, 
+        iconTheme: const IconThemeData(color: Color.fromARGB(255, 1, 1, 1)), 
       ),
-      extendBodyBehindAppBar: true, // Membuat body meluas ke belakang appbar
-      // --- PENAMBAHAN TEMA GRADIENT PADA BODY ---
+      extendBodyBehindAppBar: true,
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
             colors: [
-              Color.fromARGB(255, 255, 255, 255), // Putih di atas
-              Color.fromARGB(255, 12, 12, 12),     // Hitam di bawah
+              Color.fromARGB(255, 255, 255, 255), 
+              Color.fromARGB(255, 12, 12, 12),     
             ],
             begin: Alignment.topCenter,
             end: Alignment.bottomLeft,
           ),
         ),
-        // Pastikan kontennya di dalam SafeArea agar tidak tertutup status bar
         child: SafeArea( 
           child: ListView.builder(
             itemCount: dummycar.length,
@@ -178,10 +166,8 @@ Mobil(
                 margin: const EdgeInsets.all(12),
                 elevation: 4,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                // Card perlu warna agar tidak "bolong" dan kontras dengan gradient
-                color: Colors.white.withOpacity(0.9), // Sedikit transparan putih
+                color: Colors.white.withOpacity(0.9), 
                 child: InkWell(
-                  // Opsi 1: Klik Card juga bisa pindah (Opsional)
                   onTap: () {
                     Navigator.push(
                       context,
@@ -194,7 +180,6 @@ Mobil(
                     padding: const EdgeInsets.all(8.0),
                     child: Row(
                       children: [
-                        // Gambar Mobil
                         ClipRRect(
                           borderRadius: BorderRadius.circular(8),
                           child: Image.asset(
@@ -206,8 +191,7 @@ Mobil(
                           ),
                         ),
                         const SizedBox(width: 15),
-                        
-                        // Detail Info Mobil
+
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -217,7 +201,7 @@ Mobil(
                                 style: const TextStyle(
                                   fontSize: 17, 
                                   fontWeight: FontWeight.bold,
-                                  color: Colors.black87, // Ubah warna teks agar terlihat
+                                  color: Colors.black87,
                                 ),
                               ),
                               const SizedBox(height: 4),
@@ -232,7 +216,6 @@ Mobil(
                           ),
                         ),
 
-                        // --- TOMBOL SEWA ---
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.blue[700],
@@ -244,11 +227,9 @@ Mobil(
                           ),
                           child: const Text("Sewa", style: TextStyle(fontSize: 15)),
                           onPressed: () {
-                              // NAVIGASI KE FORM SEWA
                               Navigator.push(
                               context,
                               MaterialPageRoute(
-                                // Membuka rentForm_Screen.dart (Class FormSewaScreen)
                                 builder: (context) => FormSewaScreen(mobil: car,userId: userId,namaUser: namaUser,),
                               ),
                             );
