@@ -40,22 +40,13 @@ class _LoginScreenState extends State<LoginScreen> {
                 children: [
                   const CircleAvatar(
                     radius: 80,
-                    backgroundImage: AssetImage('asset/image/AkiraRentCar.png'),
+                    backgroundImage: AssetImage('asset/image/Akira.png'),
                   ),
                   const SizedBox(height: 25),
                   Form(
                     key: _formKey,
                     child: Column(
                       children: [
-                        const Text(
-                          "Akira Rent App",
-                          style: TextStyle(
-                            fontSize: 22,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const SizedBox(height: 25),
-                        
                         // INPUT USERNAME
                         TextFormField(
                           controller: _userCtr,
