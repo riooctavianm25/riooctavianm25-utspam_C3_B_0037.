@@ -60,7 +60,7 @@ class _HomeScreenState extends State<HomeScreen> {
           gradient: LinearGradient(
             colors: [
               Color.fromARGB(255, 240, 240, 250),
-              Color.fromARGB(255, 20, 20, 40),
+              Color.fromARGB(255, 1, 1, 1),
             ],
             begin: Alignment.topCenter,
             end: Alignment.bottomLeft,
