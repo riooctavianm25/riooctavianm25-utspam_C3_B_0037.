@@ -8,21 +8,134 @@ import 'package:uts_3012310037/page/home/car/rentForm_Screen.dart';
 class DaftarCar extends StatelessWidget {
   // List mobil didefinisikan tanpa 'const' agar tidak error
   final List<Mobil> dummycar = [
-    Mobil(
-        nama: "Toyota Avanza",
-        jenis: "MPV",
-        gambar: "asset/image/avanza.jpg",
-        harga: 250000),
-    Mobil(
-        nama: "Porsche 911 GT3",
-        jenis: "Sport",
-        gambar: "asset/image/porsche.jpg",
-        harga: 2000000),
-    Mobil(
-        nama: "Mitsubishi Pajero",
-        jenis: "SUV",
-        gambar: "asset/image/pajero.jpg",
-        harga: 450000),
+Mobil(
+    nama: "Rolls-Royce Phantom",
+    jenis: "Ultra Luxury Sedan",
+    gambar: "asset/image/RollsRoycePhantom.jpg",
+    harga: 55000000,
+  ),
+  Mobil(
+    nama: "Rolls-Royce Cullinan",
+    jenis: "Luxury SUV",
+    gambar: "asset/image/rr_cullinan.jpg",
+    harga: 50000000,
+  ),
+  Mobil(
+    nama: "Bentley Continental GT",
+    jenis: "Grand Tourer",
+    gambar: "asset/image/bentley_gt.jpg",
+    harga: 28000000,
+  ),
+  Mobil(
+    nama: "Bentley Bentayga",
+    jenis: "Luxury SUV",
+    gambar: "asset/image/bentley_bentayga.jpg",
+    harga: 27000000,
+  ),
+
+  // --- ITALIAN SUPERCARS ---
+  Mobil(
+    nama: "Lamborghini Aventador",
+    jenis: "Supercar",
+    gambar: "asset/image/aventador.jpg",
+    harga: 35000000,
+  ),
+  Mobil(
+    nama: "Lamborghini Urus",
+    jenis: "Super SUV",
+    gambar: "asset/image/urus.jpg",
+    harga: 28000000,
+  ),
+  Mobil(
+    nama: "Ferrari 488 GTB",
+    jenis: "Supercar",
+    gambar: "asset/image/ferrari488.jpg",
+    harga: 32000000,
+  ),
+  Mobil(
+    nama: "Ferrari F8 Tributo",
+    jenis: "Supercar",
+    gambar: "asset/image/ferrari_f8.jpg",
+    harga: 34000000,
+  ),
+
+  // --- BRITISH & GERMAN PERFORMANCE ---
+  Mobil(
+    nama: "McLaren 720S",
+    jenis: "Supercar",
+    gambar: "asset/image/mclaren720s.jpg",
+    harga: 33000000,
+  ),
+  Mobil(
+    nama: "Aston Martin DB11",
+    jenis: "Grand Tourer",
+    gambar: "asset/image/aston_db11.jpg",
+    harga: 30000000,
+  ),
+  Mobil(
+    nama: "Porsche 911 Carrera",
+    jenis: "Sports Car",
+    gambar: "asset/image/porsche_911.jpg",
+    harga: 10000000,
+  ),
+  Mobil(
+    nama: "Audi R8 V10",
+    jenis: "Supercar",
+    gambar: "asset/image/audi_r8.jpg",
+    harga: 13000000,
+  ),
+
+  // --- LUXURY SUVS & SEDANS ---
+  Mobil(
+    nama: "Mercedes-Maybach S-Class",
+    jenis: "Luxury Sedan",
+    gambar: "asset/image/maybach_sclass.jpg",
+    harga: 20000000,
+  ),
+  Mobil(
+    nama: "Mercedes-Benz G63 AMG",
+    jenis: "Luxury SUV",
+    gambar: "asset/image/g63_amg.jpg",
+    harga: 18000000,
+  ),
+  Mobil(
+    nama: "Range Rover Autobiography",
+    jenis: "Luxury SUV",
+    gambar: "asset/image/rangerover_auto.jpg",
+    harga: 15000000,
+  ),
+  Mobil(
+    nama: "Lexus LX 600",
+    jenis: "Luxury SUV",
+    gambar: "asset/image/lexus_lx600.jpg",
+    harga: 14000000,
+  ),
+  Mobil(
+    nama: "Cadillac Escalade",
+    jenis: "Full-size SUV",
+    gambar: "asset/image/escalade.jpg",
+    harga: 12000000,
+  ),
+  
+  // --- MPV & ELECTRIC ---
+  Mobil(
+    nama: "Lexus LM 350",
+    jenis: "Luxury MPV",
+    gambar: "asset/image/lexus_lm350.jpg",
+    harga: 8000000,
+  ),
+  Mobil(
+    nama: "Porsche Taycan Turbo",
+    jenis: "Electric Sport",
+    gambar: "asset/image/taycan.jpg",
+    harga: 12000000,
+  ),
+  Mobil(
+    nama: "BMW i7",
+    jenis: "Electric Luxury Sedan",
+    gambar: "asset/image/bmw_i7.jpg",
+    harga: 11000000,
+  ),
   ];
 
   final String namaUser;
