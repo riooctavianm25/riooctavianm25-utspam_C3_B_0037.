@@ -27,6 +27,12 @@ class _FormSewaScreenState extends State<FormSewaScreen> {
   int _totalBiaya = 0;
   DateTime? _selectedDate;
 
+  @override
+  void initState() {
+    super.initState();
+    _namaPenyewaCtr.text = widget.namaUser; // Otomatis mengisi nama penyewa
+  }
+
   // Fungsi Update Total Harga secara Realtime
   void _hitungTotal() {
     if (_lamaSewaCtr.text.isNotEmpty) {
@@ -54,7 +60,6 @@ class _FormSewaScreenState extends State<FormSewaScreen> {
       setState(() {
         _selectedDate = picked;
         // Format tanggal agar mudah dibaca (perlu import 'package:intl/intl.dart')
-        // Jika tidak pakai intl, bisa manual: "${picked.day}-${picked.month}-${picked.year}"
         _tanggalCtr.text = DateFormat('yyyy-MM-dd').format(picked);
       });
     }
@@ -108,137 +113,175 @@ class _FormSewaScreenState extends State<FormSewaScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Formulir Penyewaan")),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(20),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // --- 1. MENAMPILKAN MOBIL YANG DIPILIH ---
-              Row(
+      // --- PENYESUAIAN APPBAR AGAR GRADIENT TERLIHAT ---
+      appBar: AppBar(
+        title: const Text("Formulir Penyewaan", style: TextStyle(color: Colors.white)), // Judul putih
+        backgroundColor: Colors.transparent, // Latar belakang transparan
+        elevation: 0, // Tanpa shadow
+        iconTheme: const IconThemeData(color: Colors.white), // Tombol back jadi putih
+      ),
+      extendBodyBehindAppBar: true, // Membuat body meluas ke belakang appbar
+      // --- PENAMBAHAN TEMA GRADIENT PADA BODY ---
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              Color.fromARGB(255, 255, 255, 255), // Putih di atas
+              Color.fromARGB(255, 12, 12, 12),     // Hitam di bawah
+            ],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomLeft,
+          ),
+        ),
+        // Pastikan kontennya di dalam SafeArea agar tidak tertutup status bar
+        child: SafeArea(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(20),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: Image.asset(
-                      widget.mobil.gambar,
-                      width: 100,
-                      height: 70,
-                      fit: BoxFit.cover,
-                      errorBuilder: (ctx, error, stack) => const Icon(Icons.car_rental, size: 60),
+                  // --- 1. MENAMPILKAN MOBIL YANG DIPILIH ---
+                  // Card untuk informasi mobil agar kontras dengan gradient
+                  Card(
+                    color: Colors.white.withOpacity(0.9), // Putih transparan
+                    elevation: 4,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                    margin: const EdgeInsets.only(bottom: 20),
+                    child: Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: Row(
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(10),
+                            child: Image.asset(
+                              widget.mobil.gambar,
+                              width: 100,
+                              height: 70,
+                              fit: BoxFit.cover,
+                              errorBuilder: (ctx, error, stack) => const Icon(Icons.car_rental, size: 60, color: Colors.grey),
+                            ),
+                          ),
+                          const SizedBox(width: 15),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                widget.mobil.nama,
+                                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black87), // Warna teks hitam
+                              ),
+                              Text(
+                                "Rp ${widget.mobil.harga} / hari",
+                                style: TextStyle(color: Colors.grey[700]),
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
                     ),
                   ),
-                  const SizedBox(width: 15),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        widget.mobil.nama,
-                        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+
+                  // --- 2. INPUT NAMA PENYEWA ---
+                  TextFormField(
+                    controller: _namaPenyewaCtr,
+                    decoration: const InputDecoration(
+                      labelText: "Nama Penyewa",
+                      border: OutlineInputBorder(),
+                      prefixIcon: Icon(Icons.person),
+                      filled: true, // Mengisi latar belakang
+                      fillColor: Colors.white, // Latar belakang putih
+                    ),
+                    validator: (val) => val!.isEmpty ? "Nama wajib diisi" : null,
+                  ),
+                  const SizedBox(height: 20),
+
+                  // --- 3. INPUT LAMA SEWA (HARI) ---
+                  TextFormField(
+                    controller: _lamaSewaCtr,
+                    keyboardType: TextInputType.number,
+                    decoration: const InputDecoration(
+                      labelText: "Lama Sewa (Hari)",
+                      border: OutlineInputBorder(),
+                      prefixIcon: Icon(Icons.timer),
+                      suffixText: "Hari",
+                      filled: true,
+                      fillColor: Colors.white,
+                    ),
+                    onChanged: (value) => _hitungTotal(), // Otomatis hitung saat diketik
+                    validator: (val) {
+                      if (val!.isEmpty) return "Lama sewa wajib diisi";
+                      if (int.tryParse(val) == null || int.parse(val) <= 0) {
+                        return "Angka harus positif";
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 20),
+
+                  // --- 4. INPUT TANGGAL MULAI ---
+                  TextFormField(
+                    controller: _tanggalCtr,
+                    readOnly: true, // Tidak bisa diketik manual
+                    onTap: _selectDate, // Muncul kalender saat diklik
+                    decoration: const InputDecoration(
+                      labelText: "Tanggal Mulai Sewa",
+                      border: OutlineInputBorder(),
+                      prefixIcon: Icon(Icons.calendar_today),
+                      filled: true,
+                      fillColor: Colors.white,
+                    ),
+                    validator: (val) => val!.isEmpty ? "Tanggal wajib dipilih" : null,
+                  ),
+                  
+                  const SizedBox(height: 30),
+
+                  // --- 5. TAMPILAN TOTAL BIAYA ---
+                  Container(
+                    padding: const EdgeInsets.all(15),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.9), // Latar putih transparan
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(color: Colors.grey.shade300), // Border abu-abu terang
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          "Total Biaya:",
+                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black87), // Teks hitam
+                        ),
+                        Text(
+                          "Rp $_totalBiaya",
+                          style: const TextStyle(
+                            fontSize: 20, 
+                            fontWeight: FontWeight.bold, 
+                            color: Colors.blueAccent // Tetap biru accent untuk penekanan
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  const SizedBox(height: 30),
+
+                  // --- TOMBOL SIMPAN ---
+                  SizedBox(
+                    width: double.infinity,
+                    height: 50,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.black, // Tombol hitam
+                        foregroundColor: Colors.white, // Teks putih
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                       ),
-                      Text(
-                        "Rp ${widget.mobil.harga} / hari",
-                        style: TextStyle(color: Colors.grey[600]),
-                      ),
-                    ],
-                  )
+                      onPressed: _simpanTransaksi,
+                      child: const Text("KONFIRMASI SEWA", style: TextStyle(fontSize: 16)),
+                    ),
+                  ),
                 ],
               ),
-              const Divider(height: 40, thickness: 2),
-
-              // --- 2. INPUT NAMA PENYEWA ---
-              TextFormField(
-                controller: _namaPenyewaCtr,
-                decoration: const InputDecoration(
-                  labelText: "Nama Penyewa",
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.person),
-                ),
-                validator: (val) => val!.isEmpty ? "Nama wajib diisi" : null,
-              ),
-              const SizedBox(height: 20),
-
-              // --- 3. INPUT LAMA SEWA (HARI) ---
-              TextFormField(
-                controller: _lamaSewaCtr,
-                keyboardType: TextInputType.number,
-                decoration: const InputDecoration(
-                  labelText: "Lama Sewa (Hari)",
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.timer),
-                  suffixText: "Hari",
-                ),
-                onChanged: (value) => _hitungTotal(), // Otomatis hitung saat diketik
-                validator: (val) {
-                  if (val!.isEmpty) return "Lama sewa wajib diisi";
-                  if (int.tryParse(val) == null || int.parse(val) <= 0) {
-                    return "Angka harus positif";
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 20),
-
-              // --- 4. INPUT TANGGAL MULAI ---
-              TextFormField(
-                controller: _tanggalCtr,
-                readOnly: true, // Tidak bisa diketik manual
-                onTap: _selectDate, // Muncul kalender saat diklik
-                decoration: const InputDecoration(
-                  labelText: "Tanggal Mulai Sewa",
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.calendar_today),
-                ),
-                validator: (val) => val!.isEmpty ? "Tanggal wajib dipilih" : null,
-              ),
-              
-              const SizedBox(height: 30),
-
-              // --- 5. TAMPILAN TOTAL BIAYA ---
-              Container(
-                padding: const EdgeInsets.all(15),
-                decoration: BoxDecoration(
-                  color: Colors.blue[50],
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: Colors.blue.shade200),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text(
-                      "Total Biaya:",
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                    ),
-                    Text(
-                      "Rp $_totalBiaya",
-                      style: const TextStyle(
-                        fontSize: 20, 
-                        fontWeight: FontWeight.bold, 
-                        color: Colors.blueAccent
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-              const SizedBox(height: 30),
-
-              // --- TOMBOL SIMPAN ---
-              SizedBox(
-                width: double.infinity,
-                height: 50,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue[900],
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                  ),
-                  onPressed: _simpanTransaksi,
-                  child: const Text("KONFIRMASI SEWA", style: TextStyle(fontSize: 16)),
-                ),
-              ),
-            ],
+            ),
           ),
         ),
       ),
