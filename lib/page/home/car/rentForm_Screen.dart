@@ -115,10 +115,10 @@ class _FormSewaScreenState extends State<FormSewaScreen> {
     return Scaffold(
       // --- PENYESUAIAN APPBAR AGAR GRADIENT TERLIHAT ---
       appBar: AppBar(
-        title: const Text("Formulir Penyewaan", style: TextStyle(color: Colors.white)), // Judul putih
+        title: const Text("Formulir Penyewaan", style: TextStyle(color: Color.fromARGB(255, 0, 0, 0))), // Judul putih
         backgroundColor: Colors.transparent, // Latar belakang transparan
         elevation: 0, // Tanpa shadow
-        iconTheme: const IconThemeData(color: Colors.white), // Tombol back jadi putih
+        iconTheme: const IconThemeData(color: Color.fromARGB(255, 0, 0, 0)), // Tombol back jadi putih
       ),
       extendBodyBehindAppBar: true, // Membuat body meluas ke belakang appbar
       // --- PENAMBAHAN TEMA GRADIENT PADA BODY ---
