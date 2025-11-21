@@ -22,7 +22,6 @@ class DBHelper {
       path,
       version: 2, // Versi database
       onCreate: (db, version) async {
-        // --- 1. Buat Tabel Users ---
         await db.execute('''
           CREATE TABLE IF NOT EXISTS users (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -51,7 +50,7 @@ class DBHelper {
           )
         ''');
       },
-      // FUNGSI UPDATE DATABASE (Jika versi naik)
+
       onUpgrade: (db, oldVersion, newVersion) async {
         if (oldVersion < 2) {
           // Jika user update dari versi 1 ke 2, pastikan tabel sewa dibuat
@@ -72,10 +71,6 @@ class DBHelper {
       },
     );
   }
-
-  // ==========================================
-  //              FUNGSI AUTH (USER)
-  // ==========================================
 
   // 1. Register User Baru
   Future<int> registerUser(Map<String, dynamic> data) async {
@@ -98,7 +93,6 @@ class DBHelper {
     return null;
   }
 
-  // 3. Ambil Data Profil User Berdasarkan ID (Untuk Halaman Profil)
   Future<Map<String, dynamic>?> getUserById(int id) async {
     final db = await database;
     List<Map<String, dynamic>> results = await db.query(
@@ -112,10 +106,6 @@ class DBHelper {
     }
     return null;
   }
-
-  // ==========================================
-  //           FUNGSI TRANSAKSI (SEWA)
-  // ==========================================
 
   // 1. Tambah Sewa
   Future<int> tambahSewa(Map<String, dynamic> data) async {
