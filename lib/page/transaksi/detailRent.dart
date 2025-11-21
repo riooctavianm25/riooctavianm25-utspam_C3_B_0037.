@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../Db/db_helper.dart';
-import 'editRent.dart'; // Pastikan path ini benar
+import 'editRent.dart';
 
 class Detailrent extends StatefulWidget {
   final int sewaId;
@@ -25,7 +25,7 @@ class _DetailrentState extends State<Detailrent> {
     setState(() => _isLoading = true);
     final db = DBHelper();
     final detail = await db.getSewaById(widget.sewaId);
-    
+
     if (!mounted) return;
     setState(() {
       _sewaDetail = detail;
@@ -40,8 +40,14 @@ class _DetailrentState extends State<Detailrent> {
         title: const Text("Konfirmasi"),
         content: const Text("Yakin ingin membatalkan penyewaan ini?"),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text("Tidak")),
-          TextButton(onPressed: () => Navigator.pop(ctx, true), child: const Text("Ya", style: TextStyle(color: Colors.red))),
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: const Text("Tidak"),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            child: const Text("Ya", style: TextStyle(color: Colors.red)),
+          ),
         ],
       ),
     );
@@ -49,18 +55,21 @@ class _DetailrentState extends State<Detailrent> {
     if (confirm == true) {
       final db = DBHelper();
       await db.updateSewaStatus(widget.sewaId, "Dibatalkan");
-      
+
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Status berhasil diubah menjadi Dibatalkan"), backgroundColor: Colors.red),
+        const SnackBar(
+          content: Text("Status berhasil diubah menjadi Dibatalkan"),
+          backgroundColor: Colors.red,
+        ),
       );
-      _loadSewaDetail(); 
+      _loadSewaDetail();
     }
   }
 
   void _toEditPage() async {
     if (_sewaDetail == null) return;
-    
+
     final result = await Navigator.push(
       context,
       MaterialPageRoute(builder: (_) => Editrent(sewaData: _sewaDetail!)),
@@ -73,63 +82,80 @@ class _DetailrentState extends State<Detailrent> {
 
   @override
   Widget build(BuildContext context) {
+    // Ambil tinggi layar penuh untuk background
+    final screenHeight = MediaQuery.of(context).size.height;
+
     return Scaffold(
-      // AppBar dibuat transparan agar gradien terlihat menyatu
-      extendBodyBehindAppBar: true, 
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title: const Text("Detail Transaksi", style: TextStyle(color: Colors.black)),
+        title: const Text(
+          "Detail Transaksi",
+          style: TextStyle(color: Colors.black),
+        ),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () => Navigator.pop(context, true),
         ),
       ),
-      body: Container(
-        // --- MENERAPKAN DESAIN GRADIEN ---
-        width: double.infinity,
-        height: double.infinity,
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              Color.fromARGB(255, 255, 255, 255),
-              Color.fromARGB(255, 12, 12, 12),
-            ],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomLeft,
+      body: Stack(
+        children: [
+          Container(
+            height: screenHeight,
+            width: double.infinity,
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  Color.fromARGB(255, 255, 255, 255),
+                  Color.fromARGB(255, 24, 21, 51),
+                ],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomLeft,
+              ),
+            ),
           ),
-        ),
-        // ---------------------------------
-        child: _isLoading
-            ? const Center(child: CircularProgressIndicator())
-            : _sewaDetail == null
-                ? const Center(child: Text("Data tidak ditemukan", style: TextStyle(color: Colors.white)))
+
+          SizedBox(
+            height: screenHeight,
+            child: _isLoading
+                ? const Center(child: CircularProgressIndicator())
+                : _sewaDetail == null
+                ? const Center(
+                    child: Text(
+                      "Data tidak ditemukan",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  )
                 : SingleChildScrollView(
-                    padding: const EdgeInsets.fromLTRB(20, 100, 20, 20), // Tambah padding atas karena AppBar transparan
+                    padding: const EdgeInsets.fromLTRB(20, 100, 20, 20),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // Gambar Mobil
                         Center(
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(15),
                             child: Image.asset(
-                              _sewaDetail!['gambar_mobil'] ?? 'assets/images/placeholder.jpg',
+                              _sewaDetail!['gambar_mobil'] ??
+                                  'assets/images/placeholder.jpg',
                               width: double.infinity,
                               height: 200,
                               fit: BoxFit.cover,
                               errorBuilder: (ctx, error, stack) => Container(
-                                height: 200, 
+                                height: 200,
                                 width: double.infinity,
-                                color: Colors.grey[300], 
-                                child: const Icon(Icons.car_rental, size: 80, color: Colors.grey)
+                                color: Colors.grey[300],
+                                child: const Icon(
+                                  Icons.car_rental,
+                                  size: 80,
+                                  color: Colors.grey,
+                                ),
                               ),
                             ),
                           ),
                         ),
                         const SizedBox(height: 20),
 
-                        // Card Putih untuk membungkus detail agar tulisan terbaca jelas di atas background gelap
                         Container(
                           padding: const EdgeInsets.all(16),
                           decoration: BoxDecoration(
@@ -138,31 +164,67 @@ class _DetailrentState extends State<Detailrent> {
                           ),
                           child: Column(
                             children: [
-                              _infoRow("Mobil", _sewaDetail!['nama_mobil'] ?? '-'),
-                              _infoRow("Penyewa", _sewaDetail!['nama_penyewa'] ?? '-'),
-                              _infoRow("Lama Sewa", "${_sewaDetail!['lama_sewa'] ?? 0} Hari"),
-                              _infoRow("Tgl Mulai", _sewaDetail!['tanggal_mulai'] ?? '-'),
+                              _infoRow(
+                                "Mobil",
+                                _sewaDetail!['nama_mobil'] ?? '-',
+                              ),
+                              _infoRow(
+                                "Penyewa",
+                                _sewaDetail!['nama_penyewa'] ?? '-',
+                              ),
+                              _infoRow(
+                                "Lama Sewa",
+                                "${_sewaDetail!['lama_sewa'] ?? 0} Hari",
+                              ),
+                              _infoRow(
+                                "Tgl Mulai",
+                                _sewaDetail!['tanggal_mulai'] ?? '-',
+                              ),
                               const Divider(),
-                              _infoRow("Total Biaya", "Rp ${_sewaDetail!['total_biaya'] ?? 0}", isBold: true, color: Colors.blue),
-                              _infoRow("Status", _sewaDetail!['status'] ?? 'Unknown', isBold: true, color: _getStatusColor(_sewaDetail!['status'] ?? 'Unknown')),
+                              _infoRow(
+                                "Total Biaya",
+                                "Rp ${_sewaDetail!['total_biaya'] ?? 0}",
+                                isBold: true,
+                                color: Colors.blue,
+                              ),
+                              _infoRow(
+                                "Status",
+                                _sewaDetail!['status'] ?? 'Unknown',
+                                isBold: true,
+                                color: _getStatusColor(
+                                  _sewaDetail!['status'] ?? 'Unknown',
+                                ),
+                              ),
                             ],
                           ),
                         ),
 
                         const SizedBox(height: 30),
 
-                        // Tombol Aksi
                         if (_sewaDetail!['status'] == 'Aktif') ...[
                           SizedBox(
                             width: double.infinity,
                             height: 50,
                             child: ElevatedButton.icon(
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.orange,
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                                backgroundColor: const Color.fromARGB(
+                                  141,
+                                  73,
+                                  112,
+                                  255,
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
                               ),
                               icon: const Icon(Icons.edit, color: Colors.white),
-                              label: const Text("Edit Pesanan", style: TextStyle(color: Colors.white, fontSize: 16)),
+                              label: const Text(
+                                "Edit Pesanan",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                ),
+                              ),
                               onPressed: _toEditPage,
                             ),
                           ),
@@ -173,51 +235,56 @@ class _DetailrentState extends State<Detailrent> {
                             child: ElevatedButton.icon(
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.red,
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
                               ),
-                              icon: const Icon(Icons.cancel, color: Colors.white),
-                              label: const Text("Batalkan Sewa", style: TextStyle(color: Colors.white, fontSize: 16)),
+                              icon: const Icon(
+                                Icons.cancel,
+                                color: Colors.white,
+                              ),
+                              label: const Text(
+                                "Batalkan Sewa",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                ),
+                              ),
                               onPressed: _batalkanSewa,
                             ),
                           ),
                         ],
-                        const SizedBox(height: 20),
-                        
-                        SizedBox(
-                          width: double.infinity,
-                          height: 50,
-                          child: ElevatedButton.icon(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.grey[200],
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                            ),
-                            icon: const Icon(Icons.arrow_back, color: Colors.black87),
-                            label: const Text("Kembali", style: TextStyle(color: Colors.black87, fontSize: 16)),
-                            onPressed: () {
-                              Navigator.pop(context, true);
-                            },
-                          ),
-                        ),
                       ],
                     ),
                   ),
+          ),
+        ],
       ),
     );
   }
 
-  Widget _infoRow(String label, String value, {bool isBold = false, Color? color}) {
+  Widget _infoRow(
+    String label,
+    String value, {
+    bool isBold = false,
+    Color? color,
+  }) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(label, style: TextStyle(fontSize: 16, color: Colors.grey[800])),
-          Text(
-            value,
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
-              color: color ?? Colors.black,
+          // Gunakan Flexible agar teks value tidak overflow jika kepanjangan
+          Flexible(
+            child: Text(
+              value,
+              textAlign: TextAlign.right,
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
+                color: color ?? Colors.black,
+              ),
             ),
           ),
         ],
