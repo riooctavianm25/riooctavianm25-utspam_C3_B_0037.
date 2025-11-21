@@ -150,7 +150,7 @@ Mobil(
           gradient: LinearGradient(
             colors: [
               Color.fromARGB(255, 255, 255, 255), 
-              Color.fromARGB(255, 12, 12, 12),     
+              Color.fromARGB(255, 24, 21, 51),     
             ],
             begin: Alignment.topCenter,
             end: Alignment.bottomLeft,
