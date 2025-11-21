@@ -22,8 +22,6 @@ class FormSewaScreen extends StatefulWidget {
 
 class _FormSewaScreenState extends State<FormSewaScreen> {
   final _formKey = GlobalKey<FormState>();
-  
-  // Controller
   final _namaPenyewaCtr = TextEditingController();
   final _lamaSewaCtr = TextEditingController();
   final _tanggalCtr = TextEditingController();
@@ -106,7 +104,6 @@ class _FormSewaScreenState extends State<FormSewaScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // Mengambil tinggi layar penuh
     final screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
@@ -117,18 +114,16 @@ class _FormSewaScreenState extends State<FormSewaScreen> {
         elevation: 0,
         iconTheme: const IconThemeData(color: Colors.black),
       ),
-      // PERUBAHAN UTAMA DISINI: Menggunakan Stack
       body: Stack(
         children: [
-          // 1. Background Gradient (Fixed Height agar tidak ada putih di bawah)
           Container(
-            height: screenHeight, // Memaksa tinggi container setinggi layar
+            height: screenHeight,
             width: double.infinity,
             decoration: const BoxDecoration(
               gradient: LinearGradient(
                 colors: [
                   Color.fromARGB(255, 255, 255, 255),
-                  Color.fromARGB(255, 12, 12, 12),
+                  Color.fromARGB(255, 24, 21, 51),
                 ],
                 begin: Alignment.topCenter,
                 end: Alignment.bottomLeft,
@@ -186,7 +181,6 @@ class _FormSewaScreenState extends State<FormSewaScreen> {
                       ),
                     ),
 
-                    // --- 2. INPUT NAMA ---
                     TextFormField(
                       controller: _namaPenyewaCtr,
                       decoration: const InputDecoration(
@@ -200,7 +194,6 @@ class _FormSewaScreenState extends State<FormSewaScreen> {
                     ),
                     const SizedBox(height: 20),
 
-                    // --- 3. INPUT LAMA SEWA ---
                     TextFormField(
                       controller: _lamaSewaCtr,
                       keyboardType: TextInputType.number,
@@ -223,7 +216,6 @@ class _FormSewaScreenState extends State<FormSewaScreen> {
                     ),
                     const SizedBox(height: 20),
 
-                    // --- 4. INPUT TANGGAL ---
                     TextFormField(
                       controller: _tanggalCtr,
                       readOnly: true,
@@ -240,7 +232,6 @@ class _FormSewaScreenState extends State<FormSewaScreen> {
                     
                     const SizedBox(height: 30),
 
-                    // --- 5. TOTAL BIAYA ---
                     Container(
                       padding: const EdgeInsets.all(15),
                       decoration: BoxDecoration(
@@ -269,7 +260,6 @@ class _FormSewaScreenState extends State<FormSewaScreen> {
 
                     const SizedBox(height: 30),
 
-                    // --- TOMBOL SIMPAN ---
                     SizedBox(
                       width: double.infinity,
                       height: 50,
@@ -283,9 +273,6 @@ class _FormSewaScreenState extends State<FormSewaScreen> {
                         child: const Text("KONFIRMASI SEWA", style: TextStyle(fontSize: 16)),
                       ),
                     ),
-                    
-                    // Tambahan padding bawah agar tidak tertutup jika keyboard muncul
-                    const SizedBox(height: 20),
                   ],
                 ),
               ),
