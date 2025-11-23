@@ -181,7 +181,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
       title: Text(
         label,
-        style: const TextStyle(fontSize: 14, color: Colors.grey),
+        style: const TextStyle(fontSize: 12, color: Colors.grey),
       ),
       subtitle: Text(
         value ?? "-",
