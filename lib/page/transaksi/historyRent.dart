@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:uts_3012310037/page/transaksi/formPayment.dart';
 import '../../Db/db_helper.dart';
 import 'detailRent.dart';
 
@@ -25,8 +26,10 @@ class _HistoryrentState extends State<Historyrent> {
     setState(() {
       _isLoading = true;
     });
+    
     final db = DBHelper();
     final data = await db.getAllSewa();
+    
     setState(() {
       _riwayat = data;
       _isLoading = false;
@@ -34,16 +37,36 @@ class _HistoryrentState extends State<Historyrent> {
   }
 
   Color _getStatusColor(String status) {
-    if (status == 'Aktif') return Colors.green;
-    if (status == 'Dibatalkan') return Colors.red;
+    if (status == 'Aktif') return Colors.orange;
+    if (status == 'Lunas') return Colors.green;
     if (status == 'Selesai') return Colors.blue;
+    if (status == 'Dibatalkan') return Colors.red;
     return Colors.grey;
+  }
+
+  void _goToPayment(Map<String, dynamic> item) async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => Formpayment(
+          totalTagihan: item['total_harga']?.toString() ?? 'Rp 0', 
+          namaMobil: item['nama_mobil'] ?? 'Unknown Car',
+        ),
+      ),
+    );
+
+    if (result == true) {
+      _loadData();
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Status pembayaran diperbarui!")),
+      );
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      extendBodyBehindAppBar: true, // Transparan AppBar
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -59,7 +82,6 @@ class _HistoryrentState extends State<Historyrent> {
         ),
       ),
       body: Container(
-        // --- DESAIN GRADIEN ---
         width: double.infinity,
         height: double.infinity,
         decoration: const BoxDecoration(
@@ -72,7 +94,8 @@ class _HistoryrentState extends State<Historyrent> {
             end: Alignment.bottomLeft,
           ),
         ),
-        child: _isLoading
+        child: SafeArea(
+          child: _isLoading
             ? const Center(child: CircularProgressIndicator())
             : _riwayat.isEmpty
             ? const Center(
@@ -82,10 +105,13 @@ class _HistoryrentState extends State<Historyrent> {
                 ),
               )
             : ListView.builder(
-                padding: const EdgeInsets.fromLTRB(15, 100, 15, 20),
+                padding: const EdgeInsets.all(15),
                 itemCount: _riwayat.length,
                 itemBuilder: (context, index) {
                   final item = _riwayat[index];
+                  final String status = item['status'] ?? 'Unknown';
+                  final bool isPayable = status == 'Aktif'; 
+
                   return Card(
                     color: Colors.white.withOpacity(0.9),
                     margin: const EdgeInsets.only(bottom: 15),
@@ -113,12 +139,10 @@ class _HistoryrentState extends State<Historyrent> {
                           children: [
                             Row(
                               children: [
-                                // Gambar Mobil Kecil di List
                                 ClipRRect(
                                   borderRadius: BorderRadius.circular(10),
                                   child: Image.asset(
-                                    item['gambar_mobil'] ??
-                                        'assets/images/placeholder.jpg',
+                                    item['gambar_mobil'] ?? 'assets/images/placeholder.jpg',
                                     width: 60,
                                     height: 60,
                                     fit: BoxFit.cover,
@@ -134,8 +158,7 @@ class _HistoryrentState extends State<Historyrent> {
                                 const SizedBox(width: 15),
                                 Expanded(
                                   child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         item['nama_mobil'] ?? 'Mobil',
@@ -162,34 +185,62 @@ class _HistoryrentState extends State<Historyrent> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text(
-                                  "Tanggal: ${item['tanggal_mulai'] ?? '-'}",
-                                  style: TextStyle(
-                                    fontSize: 13,
-                                    color: Colors.grey[600],
-                                  ),
-                                ),
-                                Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 10,
-                                    vertical: 5,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: _getStatusColor(
-                                      item['status'] ?? 'Unknown',
-                                    ).withOpacity(0.15),
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  child: Text(
-                                    item['status'] ?? 'Unknown',
-                                    style: TextStyle(
-                                      color: _getStatusColor(
-                                        item['status'] ?? 'Unknown',
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "Total: ${item['total_harga'] ?? '-'}",
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 14,
                                       ),
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 13,
                                     ),
-                                  ),
+                                    Text(
+                                      "${item['tanggal_mulai'] ?? '-'}",
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        color: Colors.grey[600],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 10,
+                                        vertical: 5,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: _getStatusColor(status).withOpacity(0.15),
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      child: Text(
+                                        status,
+                                        style: TextStyle(
+                                          color: _getStatusColor(status),
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 13,
+                                        ),
+                                      ),
+                                    ),
+                                    if (isPayable) ...[
+                                      const SizedBox(width: 10),
+                                      ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: Colors.green,
+                                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                                          minimumSize: const Size(0, 30),
+                                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                        ),
+                                        onPressed: () => _goToPayment(item),
+                                        child: const Text(
+                                          "Bayar",
+                                          style: TextStyle(fontSize: 12, color: Colors.white),
+                                        ),
+                                      ),
+                                    ]
+                                  ],
                                 ),
                               ],
                             ),
@@ -200,6 +251,7 @@ class _HistoryrentState extends State<Historyrent> {
                   );
                 },
               ),
+        ),
       ),
     );
   }
