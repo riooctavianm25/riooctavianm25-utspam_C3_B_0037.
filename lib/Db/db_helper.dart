@@ -154,4 +154,14 @@ class DBHelper {
       whereArgs: [id],
     );
   }
+
+    Future<int> updateStatusPembayaran(int id, String statusBaru) async {
+    final db = await database;
+    return await db.update(
+      'sewa', // Pastikan nama tabel Anda benar ('sewa')
+      {'status': statusBaru},
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+  }
 }
