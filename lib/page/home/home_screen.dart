@@ -15,6 +15,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  
   void _handleLogout() {
     showDialog(
       context: context,
@@ -28,7 +29,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           TextButton(
             onPressed: () {
-              Navigator.pop(context); // Tutup dialog
+              Navigator.pop(context); 
               Navigator.pushAndRemoveUntil(
                 context,
                 MaterialPageRoute(builder: (_) => const LoginScreen()),
@@ -66,11 +67,11 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 // --- Header ---
                 const SizedBox(height: 20),
-                Text(
+                const Text(
                   "Selamat datang,",
                   style: TextStyle(
                     fontSize: 16,
-                    color: const Color.fromARGB(255, 0, 0, 0),
+                    color: Color.fromARGB(255, 0, 0, 0),
                   ),
                 ),
                 Text(
@@ -94,6 +95,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 const SizedBox(height: 15),
 
+                // --- MENU 1: Tambah Sewa ---
                 _menuTile(
                   icon: Icons.add_circle_outline,
                   title: "Tambah Sewa",
@@ -102,11 +104,17 @@ class _HomeScreenState extends State<HomeScreen> {
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (_) => DaftarCar(userId: widget.userId,namaUser: widget.namaUser,)),
+                      MaterialPageRoute(
+                        builder: (_) => DaftarCar(
+                          userId: widget.userId,
+                          namaUser: widget.namaUser,
+                        ),
+                      ),
                     );
                   },
                 ),
 
+                // --- MENU 2: Riwayat Sewa ---
                 _menuTile(
                   icon: Icons.history,
                   title: "Riwayat Sewa",
@@ -115,12 +123,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   onTap: () {
                     Navigator.push(
                       context,
-                      // Perbaikan: Tidak perlu mengirim sewaId saat membuka list
-                      MaterialPageRoute(builder: (_) => const Historyrent(sewaId: null)),
+                      MaterialPageRoute(builder: (_) => const Historyrent()),
                     );
                   },
                 ),
 
+                // --- MENU 4: Profil ---
                 _menuTile(
                   icon: Icons.person_outline,
                   title: "Profil Pengguna",
@@ -136,6 +144,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   },
                 ),
 
+                // --- MENU 5: Keluar ---
                 _menuTile(
                   icon: Icons.logout_rounded,
                   title: "Keluar",
