@@ -215,26 +215,6 @@ Mobil(
                             ],
                           ),
                         ),
-
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.blue[700],
-                            foregroundColor: Colors.white,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8)
-                            ),
-                            padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
-                          ),
-                          child: const Text("Sewa", style: TextStyle(fontSize: 15)),
-                          onPressed: () {
-                              Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => FormSewaScreen(mobil: car,userId: userId,namaUser: namaUser,),
-                              ),
-                            );
-                          },
-                        ),
                       ],
                     ),
                   ),
