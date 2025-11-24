@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:uts_3012310037/page/transaksi/formPayment.dart';
-import '../../Db/db_helper.dart';
+import '../../Db/db_helper.dart'; // Pastikan import ini benar
 import 'detailRent.dart';
 
 class Historyrent extends StatefulWidget {
@@ -39,7 +39,7 @@ class _HistoryrentState extends State<Historyrent> {
   Color _getStatusColor(String status) {
     if (status == 'Aktif') return Colors.orange;
     if (status == 'Lunas') return Colors.green;
-    if (status == 'Selesai') return Colors.blue;
+    if (status == 'Selesai') return Colors.green; // Ubah warna Selesai jadi hijau juga
     if (status == 'Dibatalkan') return Colors.red;
     return Colors.grey;
   }
@@ -49,16 +49,24 @@ class _HistoryrentState extends State<Historyrent> {
       context,
       MaterialPageRoute(
         builder: (context) => Formpayment(
-          totalTagihan: item['total_harga']?.toString() ?? 'Rp 0', 
+          totalTagihan: "Rp ${item['total_biaya'] ?? item['total_harga']}", // Sesuaikan field total
           namaMobil: item['nama_mobil'] ?? 'Unknown Car',
         ),
       ),
     );
 
     if (result == true) {
-      _loadData();
+      final db = DBHelper();
+      await db.updateStatusPembayaran(item['id'], 'Selesai');
+
+      await _loadData();
+
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Status pembayaran diperbarui!")),
+        const SnackBar(
+          content: Text("Status pembayaran diperbarui menjadi Selesai!"),
+          backgroundColor: Colors.green,
+        ),
       );
     }
   }
@@ -110,6 +118,7 @@ class _HistoryrentState extends State<Historyrent> {
                 itemBuilder: (context, index) {
                   final item = _riwayat[index];
                   final String status = item['status'] ?? 'Unknown';
+                  // Tombol Bayar hanya muncul jika status 'Aktif'
                   final bool isPayable = status == 'Aktif'; 
 
                   return Card(
@@ -189,7 +198,8 @@ class _HistoryrentState extends State<Historyrent> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      "Total: ${item['total_harga'] ?? '-'}",
+                                      // Menggunakan total_biaya jika ada, fallback ke total_harga
+                                      "Total: Rp ${item['total_biaya'] ?? item['total_harga']}",
                                       style: const TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 14,
@@ -224,6 +234,7 @@ class _HistoryrentState extends State<Historyrent> {
                                         ),
                                       ),
                                     ),
+                                    // Tombol hanya muncul jika status masih Aktif
                                     if (isPayable) ...[
                                       const SizedBox(width: 10),
                                       ElevatedButton(
