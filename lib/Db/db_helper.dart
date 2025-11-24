@@ -20,7 +20,7 @@ class DBHelper {
 
     return await openDatabase(
       path,
-      version: 2, // Versi database
+      version: 2, 
       onCreate: (db, version) async {
         await db.execute('''
           CREATE TABLE IF NOT EXISTS users (
@@ -35,7 +35,6 @@ class DBHelper {
           )
         ''');
 
-        // --- 2. Buat Tabel Sewa ---
         await db.execute('''
           CREATE TABLE IF NOT EXISTS sewa (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -53,7 +52,6 @@ class DBHelper {
 
       onUpgrade: (db, oldVersion, newVersion) async {
         if (oldVersion < 2) {
-          // Jika user update dari versi 1 ke 2, pastikan tabel sewa dibuat
           await db.execute('''
             CREATE TABLE IF NOT EXISTS sewa (
               id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -72,13 +70,11 @@ class DBHelper {
     );
   }
 
-  // 1. Register User Baru
   Future<int> registerUser(Map<String, dynamic> data) async {
     final db = await database;
     return await db.insert("users", data);
   }
 
-  // 2. Login User
   Future<Map<String, dynamic>?> login(String username, String password) async {
     final db = await database;
     List<Map<String, dynamic>> result = await db.query(
@@ -107,19 +103,16 @@ class DBHelper {
     return null;
   }
 
-  // 1. Tambah Sewa
   Future<int> tambahSewa(Map<String, dynamic> data) async {
     final db = await database;
     return await db.insert("sewa", data);
   }
 
-  // 2. Ambil Semua Riwayat Sewa
   Future<List<Map<String, dynamic>>> getAllSewa() async {
     final db = await database;
     return await db.query("sewa", orderBy: "id DESC");
   }
 
-  // 3. Ambil Detail Sewa per ID
   Future<Map<String, dynamic>?> getSewaById(int id) async {
     final db = await database;
     List<Map<String, dynamic>> result = await db.query(
@@ -133,7 +126,6 @@ class DBHelper {
     return null;
   }
 
-  // 4. Update Data Sewa
   Future<int> updateSewa(int id, Map<String, dynamic> data) async {
     final db = await database;
     return await db.update(
@@ -144,7 +136,6 @@ class DBHelper {
     );
   }
 
-  // 5. Update Status Sewa (Misal: Aktif -> Selesai)
   Future<int> updateSewaStatus(int id, String newStatus) async {
     final db = await database;
     return await db.update(
@@ -158,7 +149,7 @@ class DBHelper {
     Future<int> updateStatusPembayaran(int id, String statusBaru) async {
     final db = await database;
     return await db.update(
-      'sewa', // Pastikan nama tabel Anda benar ('sewa')
+      'sewa', 
       {'status': statusBaru},
       where: 'id = ?',
       whereArgs: [id],
