@@ -81,10 +81,10 @@ class _FormpaymentState extends State<Formpayment> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          icon: const Icon(Icons.arrow_back, color: Color.fromARGB(255, 0, 0, 0)),
           onPressed: () => Navigator.pop(context),
         ),
-        title: const Text("Form Pembayaran", style: TextStyle(color: Colors.white)),
+        title: const Text("Form Pembayaran", style: TextStyle(color: Color.fromARGB(255, 0, 0, 0))),
       ),
       body: Container(
         width: double.infinity,
@@ -92,7 +92,7 @@ class _FormpaymentState extends State<Formpayment> {
         decoration: const BoxDecoration(
           gradient: LinearGradient(
             colors: [
-              Color.fromARGB(255, 24, 21, 51),
+              Color.fromARGB(255, 255, 254, 255),
               Color.fromARGB(255, 45, 40, 90),
             ],
             begin: Alignment.topCenter,
@@ -109,7 +109,7 @@ class _FormpaymentState extends State<Formpayment> {
                 children: [
                   const Text(
                     "Konfirmasi Pembayaran",
-                    style: TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
+                    style: TextStyle(color: Color.fromARGB(255, 0, 0, 0), fontSize: 24, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 20),
                   
@@ -167,7 +167,7 @@ class _FormpaymentState extends State<Formpayment> {
                             ),
                             validator: (value) {
                               if (value == null || value.isEmpty) return 'Email wajib diisi';
-                              if (!value.contains('@')) return 'Email tidak valid';
+                              if (!value.contains('@gmail.com')) return 'Email tidak valid';
                               return null;
                             },
                           ),
