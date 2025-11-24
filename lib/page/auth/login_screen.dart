@@ -51,7 +51,8 @@ class _LoginScreenState extends State<LoginScreen> {
                         TextFormField(
                           controller: _userCtr,
                           validator: (value) {
-                            if (value!.isEmpty) return "Username tidak boleh kosong";
+                            if (value!.isEmpty)
+                              return "Username tidak boleh kosong";
                             return null;
                           },
                           decoration: InputDecoration(
@@ -59,8 +60,13 @@ class _LoginScreenState extends State<LoginScreen> {
                             filled: true,
                             fillColor: Colors.grey[100],
                             hintText: "Masukkan username anda",
-                            contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
-                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
+                            contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 20,
+                              vertical: 18,
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
                           ),
                           autovalidateMode: AutovalidateMode.onUserInteraction,
                         ),
@@ -71,7 +77,8 @@ class _LoginScreenState extends State<LoginScreen> {
                           controller: _passCtr,
                           obscureText: true,
                           validator: (value) {
-                            if (value!.isEmpty) return "Password tidak boleh kosong";
+                            if (value!.isEmpty)
+                              return "Password tidak boleh kosong";
                             return null;
                           },
                           decoration: InputDecoration(
@@ -79,8 +86,13 @@ class _LoginScreenState extends State<LoginScreen> {
                             filled: true,
                             fillColor: Colors.grey[100],
                             hintText: "Masukkan password anda",
-                            contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
-                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
+                            contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 20,
+                              vertical: 18,
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
                           ),
                         ),
                         const SizedBox(height: 25),
@@ -106,20 +118,23 @@ class _LoginScreenState extends State<LoginScreen> {
                                   borderRadius: BorderRadius.circular(20),
                                 ),
                               ),
-                              onPressed: () async { // Tambahkan async
+                              onPressed: () async {
+                                // Tambahkan async
                                 if (_formKey.currentState!.validate()) {
-                                  
                                   // 1. Panggil Database Helper
                                   final db = DBHelper();
-                                  
+
                                   // 2. Cek data user di database
-                                  var user = await db.login(_userCtr.text, _passCtr.text);
+                                  var user = await db.login(
+                                    _userCtr.text,
+                                    _passCtr.text,
+                                  );
 
                                   // 3. Cek Hasilnya
                                   if (user != null) {
                                     // JIKA KETEMU (BERHASIL)
                                     if (!mounted) return;
-                                    
+
                                     // Tampilkan pesan sukses sebentar
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       const SnackBar(
@@ -134,7 +149,10 @@ class _LoginScreenState extends State<LoginScreen> {
                                       context,
                                       MaterialPageRoute(
                                         // Kirim nama asli dari database ke HomeScreen
-                                        builder: (_) => HomeScreen(namaUser: user['nama'],userId: user['id'],),
+                                        builder: (_) => HomeScreen(
+                                          namaUser: user['nama'],
+                                          userId: user['id'],
+                                        ),
                                       ),
                                     );
                                   } else {
@@ -142,7 +160,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                     if (!mounted) return;
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       const SnackBar(
-                                        content: Text("Username atau password salah!"),
+                                        content: Text(
+                                          "Username atau password salah!",
+                                        ),
                                         backgroundColor: Colors.red,
                                       ),
                                     );
